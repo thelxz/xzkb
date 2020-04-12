@@ -24,7 +24,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "usbd_hid.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -97,7 +97,16 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
+	uint8_t reportLen = 8;
+	uint8_t reportBuf[8] = {0};
+	int i = HAL_GPIO_ReadPin(button1_GPIO_Port, button1_Pin);
+	if (i==0){
+		reportBuf[2] = 0x04;
+	}else{
+		reportBuf[2] = 0x00;
+	}
+	USBD_HID_SendReport(&hUsbDeviceFS, reportBuf, reportLen);
+	HAL_Delay(100);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
