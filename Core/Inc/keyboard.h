@@ -11,33 +11,33 @@
 #include <stdbool.h>
 #include "main.h"
 
-#define COLUMN0 GPIO_PIN_8
-#define COLUMN1 GPIO_PIN_9
-#define COLUMN2 GPIO_PIN_10
-#define COLUMN3 GPIO_PIN_11
-#define COLUMN4 GPIO_PIN_12
-#define COLUMN5 GPIO_PIN_13
-#define COLUMN6 GPIO_PIN_14
-#define COLUMN7 GPIO_PIN_15
+#define COLUMN0 GPIO_PIN_0
+#define COLUMN1 GPIO_PIN_1
+#define COLUMN2 GPIO_PIN_2
+#define COLUMN3 GPIO_PIN_3
+#define COLUMN4 GPIO_PIN_4
+#define COLUMN5 GPIO_PIN_5
+#define COLUMN6 GPIO_PIN_6
+#define COLUMN7 GPIO_PIN_7
 
-#define ROW0    GPIO_PIN_0
-#define ROW1    GPIO_PIN_1
-#define ROW2    GPIO_PIN_2
-#define ROW3    GPIO_PIN_3
-#define ROW4    GPIO_PIN_4
-#define ROW5    GPIO_PIN_5
-#define ROW6    GPIO_PIN_6
-#define ROW7    GPIO_PIN_7
+#define ROW0    GPIO_PIN_8
+#define ROW1    GPIO_PIN_9
+#define ROW2    GPIO_PIN_10
+#define ROW3    GPIO_PIN_11
+#define ROW4    GPIO_PIN_12
+#define ROW5    GPIO_PIN_13
+#define ROW6    GPIO_PIN_14
+#define ROW7    GPIO_PIN_15
 
 #define COLUMN(n) (COLUMN0 << (n))
 #define ROW(n) (ROW0 << (n))
 
-#define COLUMN_OFFSET	8
-#define COLUMN_PIN 		(GPIO_PIN_10|GPIO_PIN_11|GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15|GPIO_PIN_8|GPIO_PIN_9)
-#define COLUMN_PORT		GPIOB
-#define ROW_OFFSET     	0
-#define ROW_PIN    		(GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_7)
-#define ROW_PORT   		GPIOA
+#define COLUMN_OFFSET	0
+#define COLUMN_PIN 		(COLUMN0|COLUMN1|COLUMN2|COLUMN3|COLUMN4|COLUMN5|COLUMN6|COLUMN7)
+#define COLUMN_PORT		GPIOA
+#define ROW_OFFSET     	8
+#define ROW_PIN    		(ROW0|ROW1|ROW2|ROW3|ROW4|ROW5|ROW6|ROW7)
+#define ROW_PORT   		GPIOB
 
 #define KB_COLUMN 		8
 #define KB_ROW    		8
