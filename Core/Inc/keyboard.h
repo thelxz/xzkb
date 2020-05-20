@@ -46,6 +46,7 @@
 #define STATE_PRESS 	0
 #define KEYS_PRESS_MAX 	6
 
+#define KEY_LEVEL_INVAILD -1
 enum
 {
  esc,      num1,         num2,           num3,       num4,       num5,       num6,       num7,
@@ -61,7 +62,11 @@ enum
 typedef struct {
 	uint8_t matrix[KB_COLUMN * KB_ROW];
 	uint8_t keylist[KEYS_PRESS_MAX];
+	int8_t keylevel[KEYS_PRESS_MAX];
 	uint8_t keycnt;
+	uint8_t keylastlist[KEYS_PRESS_MAX];
+	int8_t keylastlevel[KEYS_PRESS_MAX];
+	uint8_t keylastcnt;
 	uint8_t vaild;
 } KeyState;
 

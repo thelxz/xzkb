@@ -156,17 +156,54 @@ bool IsSpecialKey(uint8_t keyId)
 	return isSpecialKey[keyId];
 }
 
+void BackupLastKeyList(KeyState * keystate)
+{
+	for (int i=0; i<keystate->keycnt; i++){
+		keystate->keylastlist[i] = keystate->keylist[i];
+		keystate->keylastlevel[i] = keystate->keylevel[i];
+	}
+	keystate->keylastcnt = keystate->keycnt;
+}
+
+int lastPress(KeyState * keystate, uint8_t keyId)
+{
+	for (int i=0; i<keystate->keylastcnt; i++){
+		if (keystate->keylastlist[i] == keyId){
+			return i;
+		}
+	}
+	return -1;
+}
+
+void UpdateKeyLevel(KeyState * keystate)
+{
+	uint8_t * m = keystate->matrix;
+	uint8_t curlevel = m[lFn] | m[rFn];
+	for (int i=0; i<keystate->keycnt; i++){
+		if (keystate->keylevel[i] == KEY_LEVEL_INVAILD){
+			keystate->keylevel[i] = curlevel;
+		}
+	}
+}
+
 void UpdateKeyState(int row, int col, int stat, KeyState * keystate)
 {
 	uint8_t keyId = row * KB_COLUMN + col;
 	keystate->matrix[keyId] = (stat == STATE_PRESS);
+	int lastIdx = lastPress(keystate,keyId);
 	if (stat == STATE_PRESS){
 		if (IsSpecialKey(keyId)) {
 			return ;
+		} else if (lastIdx != -1){
+			keystate->keylist[keystate->keycnt] = keyId;
+			keystate->keylevel[keystate->keycnt] = keystate->keylastlevel[lastIdx];
+			keystate->keycnt ++;
 		} else if (keystate->keycnt == KEYS_PRESS_MAX) {
 			keystate->vaild = false;
 		} else {
-			keystate->keylist[keystate->keycnt++] = keyId;
+			keystate->keylist[keystate->keycnt] = keyId;
+			keystate->keylevel[keystate->keycnt] = KEY_LEVEL_INVAILD;
+			keystate->keycnt ++;
 		}
 	}
 }
@@ -189,6 +226,8 @@ void ScanKeyState(KeyState * keystate)
 			UpdateKeyState(i, j, stat, keystate);
 		}
 	}
+	UpdateKeyLevel(keystate);
+	BackupLastKeyList(keystate);
 }
 
 uint8_t KeyIdToUID(uint8_t keyId, uint8_t level)
@@ -216,7 +255,6 @@ void GenReport(KeyState * keystate, uint8_t * reportBuf)
 							m[rShift] << 5 |
 							m[rAlt]   << 6 |
 							m[rWin]   << 7;
-	uint8_t level = m[lFn] | m[rFn];
 	reportBuf[0] = specialKey;
 	reportBuf[1] = 0;
 	reportBuf[2] = 0;
@@ -227,7 +265,7 @@ void GenReport(KeyState * keystate, uint8_t * reportBuf)
 	reportBuf[7] = 0;
 	for (i=0; i<keystate->keycnt; i++){
 		if (keystate->vaild){
-			reportBuf[i+2] = KeyIdToUID(keystate->keylist[i], level);
+			reportBuf[i+2] = KeyIdToUID(keystate->keylist[i], keystate->keylevel[i]);
 		} else {
 			reportBuf[i+2] = 0xff;
 		}
